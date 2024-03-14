@@ -17,10 +17,23 @@ export default class Preloader extends Phaser.Scene {
       'characters/rocket-mouse.png',
       'characters/rocket-mouse.json'
     )
+
+    this.load.image(
+      TextureKeys.MouseHole,
+      'house/object_mousehole.png'
+    )
+
+
+    this.load.image(TextureKeys.Window1, 'house/object_window1.png')
+    this.load.image(TextureKeys.Window2, 'house/object_window2.png')
+    
+    this.load.image(TextureKeys.Bookcase1, 'house/object_bookcase1.png')
+    this.load.image(TextureKeys.Bookcase2, 'house/object_bookcase2.png')
   }
 
 
   create() {
+    // run animation
     this.anims.create({
       key: AnimationKeys.RocketMouseRun,  // name of the animation
       frames: this.anims.generateFrameNames(TextureKeys.RocketMouse, {
@@ -32,6 +45,37 @@ export default class Preloader extends Phaser.Scene {
       }),
       frameRate: 10,
       repeat: -1 // -1 to loop forever
+    })
+
+
+    // fall animation
+    this.anims.create({
+      key: AnimationKeys.RocketMouseFall,
+      frames: [{
+        key: TextureKeys.RocketMouse,
+        frame: 'rocketmouse_fall01.png'
+      }]
+    })
+
+
+
+    // new fly animation
+    this.anims.create({
+      key: AnimationKeys.RocketMouseFly,
+      frames: [{
+        key: TextureKeys.RocketMouse,
+        frame: 'rocketmouse_fly01.png'
+      }]
+    })
+
+    // create the flames
+    this.anims.create({
+      key: AnimationKeys.RocketFlamesOn,
+      frames: this.anims.generateFrameNames(TextureKeys.RocketMouse,
+        {start: 1, end: 2, prefix: 'flame', suffix: '.png'}
+        ),
+      frameRate: 10,
+      repeat: -1
     })
     
     this.scene.start(SceneKeys.Game)
