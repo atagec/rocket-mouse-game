@@ -40,6 +40,8 @@ export default class LaserObstacle extends Phaser.GameObjects.Container {
     body.setSize(width, height)
     body.setOffset(-width * 0.5, 0)
 
+    // DO: LASER COLLISION BOX WILL BE ADJUSTED
+
     // reposition body
     body.position.x = this.x + body.offset.x
     body.position.y = this.y

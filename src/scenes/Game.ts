@@ -26,9 +26,55 @@ export default class Game extends Phaser.Scene {
   private coins!: Phaser.Physics.Arcade.StaticGroup
   private scoreLabel!: Phaser.GameObjects.Text
   private score = 0
+  private mouse!: RocketMouse
 
   init() {
     this.score = 0
+  }
+
+  private teleportBackwards() {
+    // DO: INTEGRATE TELEPORT
+    const scrollX = this.cameras.main.scrollX
+    const maxX = 2380
+
+    // perform a teleport once scrolled beyond 2500
+    if (scrollX > maxX) {
+      // teleport the mouse and mousehole
+      this.mouse.x -= maxX
+      this.mouseHole.x -= maxX
+
+      // teleport each window
+      this.windows.forEach(win => {
+        win.x -= maxX
+      })
+
+      // teleport each bookcase
+      this.bookcases.forEach(bc => {
+        bc.x -= maxX
+      })
+
+      // teleport the laser
+      this.laserObstacle.x -= maxX
+      const laserBody = this.laserObstacle.body as Phaser.Physics.Arcade.StaticBody
+
+      // as well as the laser physics body
+      laserBody.x -= maxX
+
+      this.spawnCoins()
+
+
+      // teleport any spawned coins
+      this.coins.children.each(child => {
+        const coin = child as Phaser.Physics.Arcade.Sprite
+        if (!coin.active) {
+          return
+        }
+
+        coin.x -= maxX
+        const body = coin.body as Phaser.Physics.Arcade.StaticBody
+        body.updateFromGameObject()
+      })
+    }
   }
 
   private wrapMouseHole() {
@@ -185,8 +231,12 @@ export default class Game extends Phaser.Scene {
       body.setCircle(body.width * 0.5)
       body.enable = true
 
+      body.updateFromGameObject()
+
       // move x a random amount
       x += coin.width * 1.5
+
+
     }
   }
 
@@ -285,7 +335,7 @@ export default class Game extends Phaser.Scene {
       // we are using MAX_SAFE_INTEGER
       // because computer memory is limited
       // PAGE 31
-      Number.MAX_SAFE_INTEGER, height - 30 // width, height
+      Number.MAX_SAFE_INTEGER, height - 55 // width, height
     )
 
 
@@ -323,6 +373,7 @@ export default class Game extends Phaser.Scene {
     this.wrapWindows()
     this.wrapBookcases()
     this.wrapLaserObstacle()
+    // this.teleportBackwards()
 
     // scroll background
     this.background.setTilePosition(this.cameras.main.scrollX)

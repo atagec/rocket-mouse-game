@@ -39,6 +39,65 @@ export default class RocketMouse extends Phaser.GameObjects.Container {
     this.enableJetPack(false)
   }
 
+  private createAnimations() {
+     // run animation
+     this.mouse.anims.create({
+      key: AnimationKeys.RocketMouseRun,  // name of the animation
+      frames: this.mouse.anims.generateFrameNames(TextureKeys.RocketMouse, {
+        start: 1,
+        end: 4,
+        prefix: 'rocketmouse_run',
+        zeroPad: 2,  // zeroPad is necessary if the animation has more than 9 frames
+        suffix: '.png'
+      }),
+      frameRate: 10,
+      repeat: -1 // -1 to loop forever
+    })
+
+
+    // fall animation
+    this.mouse.anims.create({
+      key: AnimationKeys.RocketMouseFall,
+      frames: [{
+        key: TextureKeys.RocketMouse,
+        frame: 'rocketmouse_fall01.png'
+      }]
+    })
+
+
+
+    // new fly animation
+    this.mouse.anims.create({
+      key: AnimationKeys.RocketMouseFly,
+      frames: [{
+        key: TextureKeys.RocketMouse,
+        frame: 'rocketmouse_fly01.png'
+      }]
+    })
+
+    // create the flames
+    this.mouse.anims.create({
+      key: AnimationKeys.RocketFlamesOn,
+      frames: this.mouse.anims.generateFrameNames(TextureKeys.RocketMouse,
+        {start: 1, end: 2, prefix: 'flame', suffix: '.png'}
+        ),
+      frameRate: 10,
+      repeat: -1
+    })
+
+    this.mouse.anims.create({
+      key: AnimationKeys.RocketMouseDead,
+      frames: this.mouse.anims.generateFrameNames(TextureKeys.RocketMouse, {
+        start: 1,
+        end: 2,
+        prefix: 'rocketmouse_dead',
+        zeroPad: 2,
+        suffix: '.png'
+      }),
+      frameRate: 10
+    })
+  }
+
   constructor(scene: Phaser.Scene, x: number, y: number) {
     super(scene, x, y)
 
@@ -46,12 +105,16 @@ export default class RocketMouse extends Phaser.GameObjects.Container {
     // create the rocket mouse sprite
     this.mouse = scene.add.sprite(0, 0, TextureKeys.RocketMouse)
         .setOrigin(0.5, 1)
-        .play(AnimationKeys.RocketMouseRun)
+        // .play(AnimationKeys.RocketMouseRun)
 
 
     // create the flames and play the animation
     this.flames = scene.add.sprite(-63, -15, TextureKeys.RocketMouse)
-      .play(AnimationKeys.RocketFlamesOn)
+      // .play(AnimationKeys.RocketFlamesOn)
+    
+    this.createAnimations()
+    this.mouse.play(AnimationKeys.RocketMouseRun)
+    this.flames.play(AnimationKeys.RocketFlamesOn)
     
     this.enableJetPack(false)
 
@@ -68,8 +131,11 @@ export default class RocketMouse extends Phaser.GameObjects.Container {
 
     // adjust physics body size and offset
     const body = this.body as Phaser.Physics.Arcade.Body
-    body.setSize(this.mouse.width, this.mouse.height)
-    body.setOffset(this.mouse.width * -0.5, -this.mouse.height)
+
+    // use the half width and 70% of height
+    body.setSize(this.mouse.width * 0.5, this.mouse.height * 0.7)
+    // adjust offset to match
+    body.setOffset(this.mouse.width * -0.3, -this.mouse.height + 15)
 
   }
 

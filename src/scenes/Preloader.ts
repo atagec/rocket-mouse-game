@@ -11,6 +11,7 @@ export default class Preloader extends Phaser.Scene {
 
   preload() {
     this.load.image(TextureKeys.Background, 'house/bg_repeat_340x640.png')
+    // this.load.image(TextureKeys.Background, 'house/bg_repeat_340x640.png')
 
     this.load.atlas(
       TextureKeys.RocketMouse,
@@ -38,62 +39,7 @@ export default class Preloader extends Phaser.Scene {
 
 
   create() {
-    // run animation
-    this.anims.create({
-      key: AnimationKeys.RocketMouseRun,  // name of the animation
-      frames: this.anims.generateFrameNames(TextureKeys.RocketMouse, {
-        start: 1,
-        end: 4,
-        prefix: 'rocketmouse_run',
-        zeroPad: 2,  // zeroPad is necessary if the animation has more than 9 frames
-        suffix: '.png'
-      }),
-      frameRate: 10,
-      repeat: -1 // -1 to loop forever
-    })
-
-
-    // fall animation
-    this.anims.create({
-      key: AnimationKeys.RocketMouseFall,
-      frames: [{
-        key: TextureKeys.RocketMouse,
-        frame: 'rocketmouse_fall01.png'
-      }]
-    })
-
-
-
-    // new fly animation
-    this.anims.create({
-      key: AnimationKeys.RocketMouseFly,
-      frames: [{
-        key: TextureKeys.RocketMouse,
-        frame: 'rocketmouse_fly01.png'
-      }]
-    })
-
-    // create the flames
-    this.anims.create({
-      key: AnimationKeys.RocketFlamesOn,
-      frames: this.anims.generateFrameNames(TextureKeys.RocketMouse,
-        {start: 1, end: 2, prefix: 'flame', suffix: '.png'}
-        ),
-      frameRate: 10,
-      repeat: -1
-    })
-
-    this.anims.create({
-      key: AnimationKeys.RocketMouseDead,
-      frames: this.anims.generateFrameNames(TextureKeys.RocketMouse, {
-        start: 1,
-        end: 2,
-        prefix: 'rocketmouse_dead',
-        zeroPad: 2,
-        suffix: '.png'
-      }),
-      frameRate: 10
-    })
+   
     
     this.scene.start(SceneKeys.Game)
   }
